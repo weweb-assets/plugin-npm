@@ -5,49 +5,30 @@ import './components/loadPackage.vue';
 /* wwEditor:end */
 
 export default {
-    packages: {},
-
     async onLoad() {
-        this.addScripts(this.settings.publicData.packages, wwLib.getFrontDocument());
-        /* wwEditor:start */
-        this.addScripts(this.settings.publicData.packages, wwLib.getEditorDocument());
-        /* wwEditor:end */
+        this.addScripts(this.settings.publicData.packages);
     },
 
     loadPackage() {
-        this.addScript(this.settings.publicData.packages[0], wwLib.getFrontDocument());
-        /* wwEditor:start */
-        this.addScript(this.settings.publicData.packages[0], wwLib.getEditorDocument());
-        /* wwEditor:end */
+        this.addScript(this.settings.publicData.packages[0]);
     },
 
-    addScript(packageItem, context) {
+    async addScript(packageItem) {
         const packageSrc = `https://unpkg.com/${packageItem.name}@${packageItem.version}`;
-        const existingScript = context.querySelector(`script[src="${packageSrc}"]`);
         if (existingScript) return;
 
-        const script = context.createElement('script');
-        script.type = 'text/javascript';
-        script.src = packageSrc;
+        const response = await fetch(packageSrc);
+        const scriptText = await response.text();
 
-        context.head.appendChild(script);
+        const scriptFunction = new Function(scriptText);
+        const libraryInstance = scriptFunction();
 
-        console.log(
-            `Added script ${packageSrc} to ${context === wwLib.getFrontDocument() ? 'front' : 'editor'} window`
-        );
-
-        console.log(`${this.id}-${packageItem.name}`, wwLib.getFrontWindow()[packageItem.name]);
-        console.log(`${this.id}-${packageItem.name}`, wwLib.getEditorWindow()[packageItem.name]);
-
-        wwLib.wwVariable.updateValue(`${this.id}-${packageItem.name}`, wwLib.getFrontWindow()[packageItem.name]);
-        /* wwEditor:start */
-        wwLib.wwVariable.updateValue(`${this.id}-${packageItem.name}`, wwLib.getEditorWindow()[packageItem.name]);
-        /* wwEditor:end */
+        wwLib.wwVariable.updateValue(`${this.id}-${packageItem.name}`, libraryInstance);
     },
 
-    addScripts(packages, context) {
+    addScripts(packages) {
         for (const packageItem of packages || []) {
-            this.addScript(packageItem, context);
+            this.addScript(packageItem);
         }
     },
 
