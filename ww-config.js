@@ -15,7 +15,7 @@ export default {
         return (settings.publicData.packages || []).map(pack => ({
             name: pack.name,
             version: pack.version,
-            value: 'Package',
+            value: {},
             type: 'object',
             defaultValue: null,
         }));

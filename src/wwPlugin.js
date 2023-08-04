@@ -31,6 +31,8 @@ export default {
         script.src = packageSrc;
 
         context.head.appendChild(script);
+
+        wwLib.wwVariable.updateValue(`${this.id}-${packageItem.name}`, window[packageItem.name]);
     },
 
     addScripts(packages, context) {
@@ -38,4 +40,6 @@ export default {
             this.addScript(packageItem, context);
         }
     },
+
+    updatePluginVariables() {},
 };
