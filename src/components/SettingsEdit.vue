@@ -197,7 +197,7 @@ export default {
     width: auto;
 }
 
-.version-input {
+.instanceName-input {
     max-width: 80px;
     width: auto;
 }
