@@ -15,7 +15,6 @@ export default {
 
     async addScript(packageItem) {
         const packageSrc = `https://unpkg.com/${packageItem.name}@${packageItem.version}`;
-        if (existingScript) return;
 
         const response = await fetch(packageSrc);
         const scriptText = await response.text();
