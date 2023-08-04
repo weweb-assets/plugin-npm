@@ -25,11 +25,7 @@ export default {
         wwLib.wwVariable.updateValue(`${this.id}-${packageItem.name}`, libraryInstance);
     },
 
-    addScripts(packages) {
-        for (const packageItem of packages || []) {
-            this.addScript(packageItem);
-        }
+    async addScripts(packages) {
+        await Promise.all(packages.map(packageItem => this.addScript(packageItem)));
     },
-
-    updatePluginVariables() {},
 };
