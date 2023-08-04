@@ -91,6 +91,7 @@
 <script>
 export default {
     props: {
+        plugin: { type: Object, required: true },
         settings: { type: Object, required: true },
     },
     emits: ['update:settings'],
@@ -197,7 +198,7 @@ export default {
 }
 
 .version-input {
-    max-width: 120px;
+    max-width: 80px;
     width: auto;
 }
 
