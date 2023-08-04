@@ -38,7 +38,7 @@ export default {
 
         context.head.appendChild(script);
 
-        wwLib.wwVariable.updateValue(`${this.id}-${packageItem.name}`, context[packageItem.instanceName]);
+        this.updateInstanceName(packageName, packageItem.instanceName);
     },
 
     updateInstanceName(packageName, instanceName) {
