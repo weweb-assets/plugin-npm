@@ -139,8 +139,8 @@ export default {
 
             this.$nextTick(this.loadInstance);
         },
-        updateInstancesNames(packageName) {
-            this.plugin.updateInstanceName(packageName);
+        updateInstanceName(packageName, instanceName) {
+            this.plugin.updateInstanceName(packageName, instanceName);
         },
         loadInstance() {
             this.plugin.onLoad();
