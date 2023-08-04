@@ -38,7 +38,7 @@ export default {
 
         context.head.appendChild(script);
 
-        this.updateInstanceName(packageName, packageItem.instanceName);
+        this.updateInstanceName(packageItem.name, packageItem.instanceName);
     },
 
     updateInstanceName(packageName, instanceName) {
