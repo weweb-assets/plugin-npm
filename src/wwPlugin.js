@@ -7,11 +7,9 @@ import './components/loadPackage.vue';
 export default {
     packages: {},
 
-    async onLoad() {
+    onLoad() {
         addScripts(this.settings.publicData.packages, wwLib.getFrontDocument());
     },
-
-    // this.$nextTick(this.loadInstance);
 
     loadPackage({ data, fileName }, wwUtils) {
         addScript(this.settings.publicData.packages[0], wwLib.getFrontDocument());
@@ -22,6 +20,10 @@ export default {
         /* wwEditor:end */
 
         console.log({ data, fileName }, wwUtils);
+    },
+
+    load() {
+        addScripts(this.settings.publicData.packages, wwLib.getFrontDocument());
     },
 };
 

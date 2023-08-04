@@ -122,11 +122,18 @@ export default {
                 ...(this.settings.publicData.packages || []),
                 { name: pack.name, version: pack.version },
             ]);
+
+            this.$nextTick(this.loadInstance);
         },
         removePackage(index) {
             const packages = [...this.settings.publicData.packages];
             packages.splice(index, 1);
             this.changePackages(packages);
+
+            this.$nextTick(this.loadInstance);
+        },
+        loadInstance() {
+            this.plugin.load();
         },
     },
 };
