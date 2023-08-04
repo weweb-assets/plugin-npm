@@ -8,33 +8,14 @@ export default {
     packages: {},
 
     async onLoad() {
-        for (const packageItem of this.settings.publicData.packages || []) {
-            console.log('packageItem', packageItem);
-            const packageSrc = `https://unpkg.com/${packageItem.name}@${packageItem.version}`;
-            const scriptFront = wwLib.getFrontDocument().createElement('script');
-            scriptFront.type = 'text/javascript';
-            scriptFront.src = packageSrc;
-            scriptFront.onload = () => {
-                packages['packageItem.name'] = wwLib.getFrontWindow()[packageItem.name];
-            };
-            wwLib.getFrontDocument().head.appendChild(scriptFront);
-            /* wwEditor:start */
-            const scriptEditor = wwLib.getEditorDocument().createElement('script');
-            scriptEditor.type = 'text/javascript';
-            scriptEditor.src = packageSrc;
-            wwLib.getEditorDocument().head.appendChild(scriptEditor);
-            scriptEditor.onload = () => {
-                packages['packageItem.name'] = wwLib.getEditorWindow()[packageItem.name];
-            };
-            /* wwEditor:end */
-        }
-
-        console.log('onload', this.packages);
+        addScripts(this.settings.publicData.packages, wwLib.getFrontDocument());
     },
 
     // this.$nextTick(this.loadInstance);
 
     loadPackage({ data, fileName }, wwUtils) {
+        addScript(this.settings.publicData.packages[0], wwLib.getFrontDocument());
+
         data = { test: 'test' };
         /* wwEditor:start */
         wwUtils && wwUtils.log({ label: 'Data', preview: data });
@@ -43,3 +24,24 @@ export default {
         console.log({ data, fileName }, wwUtils);
     },
 };
+
+function addScript(packageItem, context) {
+    const packageSrc = `https://unpkg.com/${packageItem.name}@${packageItem.version}`;
+    const existingScript = context.querySelector(`script[src="${packageSrc}"]`);
+    if (existingScript) return;
+
+    const script = context.createElement('script');
+    script.type = 'text/javascript';
+    script.src = packageSrc;
+    script.onload = () => {
+        packages[packageItem.name] = wwLib.getFrontWindow()[packageItem.name];
+    };
+
+    context.head.appendChild(script);
+}
+
+function addScripts(packages, context) {
+    for (const packageItem of packages) {
+        if (packageItem.auto) addScript(packageItem, context);
+    }
+}

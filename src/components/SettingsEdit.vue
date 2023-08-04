@@ -1,8 +1,8 @@
 <template>
     <div class="npm-settings-edit">
         <div class="installedPackage mb-4" v-if="settings.publicData?.packages?.length">
-            <div v-for="pack in settings.publicData.packages" class="flex flex-row justify-between">
-                <span class="label-2 text-stale-900 mb-2 flex flex-row items-center">
+            <div v-for="pack in settings.publicData.packages" class="flex flex-row justify-between mb-2 items-center">
+                <span class="label-2 text-stale-900 flex flex-row items-center w-100">
                     {{ pack.name }}
 
                     <input
@@ -11,6 +11,11 @@
                         type="text"
                         :placeholder="pack.version"
                     />
+
+                    <div class="m-auto-left flex flex-row items-center mr-2">
+                        <span class="mr-2 body-sm">Auto load</span>
+                        <wwEditorInputSwitch small v-model="pack.auto" />
+                    </div>
                 </span>
 
                 <button
@@ -34,7 +39,12 @@
             </wwEditorFormRow>
 
             <div v-if="packagesResults.length && searchedPackages.length">
-                <div class="ww-package-preview p-2 mb-2" v-for="(pack, index) in packagesResults" :key="index">
+                <div
+                    v-for="(pack, index) in packagesResults"
+                    :key="index"
+                    class="ww-package-preview p-2 mb-2"
+                    :class="{ '-selected': selectedPackages.includes(pack.name) }"
+                >
                     <div class="flex flex-row justify-between">
                         <span class="label-2 text-stale-900 mb-1 flex flex-row items-end">
                             <a :href="pack.links?.homepage" target="_blank">{{ pack.name }}</a>
@@ -56,7 +66,11 @@
                         {{ pack.description }}
                     </div>
 
-                    <div class="ww-editor-button -primary -small m-auto-left" @click="selectPackage(pack)">
+                    <div
+                        class="ww-editor-button -primary -small m-auto-left"
+                        v-if="!selectedPackages.includes(pack.name)"
+                        @click="selectPackage(pack)"
+                    >
                         <wwEditorIcon class="ww-editor-button-icon" name="plus" small />
                         add
                     </div>
@@ -81,6 +95,9 @@ export default {
         };
     },
     computed: {
+        selectedPackages() {
+            return (this.settings.publicData.packages || []).map(pack => pack.name);
+        },
         availablePackages() {
             if (!this.packagesResults && !Array.isArray(this.packagesResults)) return [];
             return this.packagesResults.map(pack => ({ label: pack.name, value: pack.name, detail: pack.name }));
@@ -146,6 +163,11 @@ export default {
     overflow: hidden;
     transition: border-color 0.3s ease, background-color 0.3s ease;
     will-change: border-color, background-color;
+
+    &.-selected:hover,
+    &.-selected {
+        border-color: var(--ww-color-green-500);
+    }
 
     &:hover {
         border: 1px solid var(--ww-color-blue-500);
