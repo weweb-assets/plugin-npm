@@ -11,4 +11,23 @@ export default {
             },
         },
     },
+    variables: settings => {
+        return (settings.publicData.packages || []).map(pack => ({
+            name: pack.package,
+            version: pack.version,
+            value: 'Package',
+            type: 'object',
+            defaultValue: null,
+        }));
+    },
+    actions: [
+        {
+            name: 'Load package',
+            code: 'loadPackage',
+            isAsync: true,
+            /* wwEditor:start */
+            edit: () => import('./src/components/loadPackage.vue'),
+            /* wwEditor:end */
+        },
+    ],
 };

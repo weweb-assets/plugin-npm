@@ -1,32 +1,68 @@
 <template>
     <div class="npm-settings-edit">
-        <wwEditorInputRow
-            label="Packages"
-            type="array"
-            :model-value="settings.publicData.packages"
-            @update:modelValue="changePackages"
-            @add-item="changePackages([...(settings.publicData.packages || []), { version: 'latest' }])"
-        >
-            <template #append-label>
-                <a class="npm-settings-edit__link" href="https://www.npmjs.com/" target="_blank"> Find it here </a>
-            </template>
-            <template #default="{ item, setItem }">
-                <wwEditorInputRow
-                    type="query"
-                    :model-value="item.name"
-                    placeholder="Enter a name"
-                    small
-                    @update:modelValue="setItem({ ...item, name: $event })"
+        <div class="installedPackage mb-4" v-if="settings.publicData?.packages?.length">
+            <div v-for="pack in settings.publicData.packages" class="flex flex-row justify-between">
+                <span class="label-2 text-stale-900 mb-2 flex flex-row items-center">
+                    {{ pack.name }}
+
+                    <input
+                        v-model="pack.version"
+                        class="ww-editor-input version-input -small ml-2"
+                        type="text"
+                        :placeholder="pack.version"
+                    />
+                </span>
+
+                <button
+                    type="button"
+                    class="ww-editor-button -icon -tertiary -red -small m-auto-left"
+                    @click="removePackage(index)"
+                >
+                    <wwEditorIcon class="ww-editor-button-icon" name="trash" small />
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <wwEditorFormRow label="Search for a package">
+                <wwEditorInputText
+                    class="-full"
+                    v-model="searchedPackages"
+                    placeholder="Search for a package"
+                    @keyup="searchPackages"
                 />
-                <wwEditorInputRow
-                    type="query"
-                    :model-value="item.version"
-                    placeholder="Enter a version"
-                    small
-                    @update:modelValue="setItem({ ...item, version: $event })"
-                />
-            </template>
-        </wwEditorInputRow>
+            </wwEditorFormRow>
+
+            <div v-if="packagesResults.length && searchedPackages.length">
+                <div class="ww-package-preview p-2 mb-2" v-for="(pack, index) in packagesResults" :key="index">
+                    <div class="flex flex-row justify-between">
+                        <span class="label-2 text-stale-900 mb-1 flex flex-row items-end">
+                            <a :href="pack.links?.homepage" target="_blank">{{ pack.name }}</a>
+                            <span class="body-sm ml-2 text-stale-500">{{ pack.version }}</span>
+                        </span>
+                        <span class="flex flex-row justify-between">
+                            <a :href="pack.links?.repository" target="_blank">
+                                <wwEditorIcon name="github" class="text-stale-900" />
+                            </a>
+                        </span>
+                    </div>
+                    <div class="body-sm mb-2 text-stale-500" v-if="pack.author?.name">
+                        {{ pack.author?.name }}
+                    </div>
+                    <div class="body-sm mb-2 text-stale-500" v-else-if="pack.publisher?.username">
+                        {{ pack.publisher?.username }}
+                    </div>
+                    <div class="body-sm mb-2">
+                        {{ pack.description }}
+                    </div>
+
+                    <div class="ww-editor-button -primary -small m-auto-left" @click="selectPackage(pack)">
+                        <wwEditorIcon class="ww-editor-button-icon" name="plus" small />
+                        add
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -36,9 +72,44 @@ export default {
         settings: { type: Object, required: true },
     },
     emits: ['update:settings'],
+    data() {
+        return {
+            searchedPackages: '',
+            packagesResults: [],
+            selectedPackage: '',
+            selectedVersion: 'latest',
+        };
+    },
+    computed: {
+        availablePackages() {
+            if (!this.packagesResults && !Array.isArray(this.packagesResults)) return [];
+            return this.packagesResults.map(pack => ({ label: pack.name, value: pack.name, detail: pack.name }));
+        },
+    },
     methods: {
         changePackages(packages) {
             this.$emit('update:settings', { ...this.settings, publicData: { packages } });
+        },
+        async searchPackages() {
+            if (this.searchedPackages.length > 1) {
+                const response = await wwAxios.get(`https://api.npms.io/v2/search?q=${this.searchedPackages}&size=10`);
+                this.packagesResults = response.data.results.map(result => result.package);
+            } else {
+                this.packagesResults = [];
+            }
+        },
+        selectPackage(pack) {
+            this.searchedPackages = '';
+            this.packagesResults = [];
+            this.changePackages([
+                ...(this.settings.publicData.packages || []),
+                { name: pack.name, version: pack.version },
+            ]);
+        },
+        removePackage(index) {
+            const packages = [...this.settings.publicData.packages];
+            packages.splice(index, 1);
+            this.changePackages(packages);
         },
     },
 };
@@ -59,5 +130,34 @@ export default {
     &__radio-label {
         margin-left: var(--ww-spacing-02);
     }
+}
+
+.ww-package-preview {
+    --default-padding: 1px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: var(--ww-color-theme-dark-50);
+    border-radius: var(--ww-border-radius-02);
+    border: 1px solid var(--ww-color-theme-dark-100);
+    overflow: hidden;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    will-change: border-color, background-color;
+
+    &:hover {
+        border: 1px solid var(--ww-color-blue-500);
+    }
+}
+
+.version-input {
+    max-width: 60px;
+    width: auto;
+}
+
+.m-auto-left {
+    margin-left: auto;
 }
 </style>
