@@ -32,6 +32,13 @@ export default {
 
         context.head.appendChild(script);
 
+        console.log(
+            `Added script ${packageSrc} to ${context === wwLib.getFrontDocument() ? 'front' : 'editor'} window`
+        );
+
+        console.log(`${this.id}-${packageItem.name}`, wwLib.getFrontWindow()[packageItem.name]);
+        console.log(`${this.id}-${packageItem.name}`, wwLib.getEditorWindow()[packageItem.name]);
+
         wwLib.wwVariable.updateValue(`${this.id}-${packageItem.name}`, wwLib.getFrontWindow()[packageItem.name]);
         /* wwEditor:start */
         wwLib.wwVariable.updateValue(`${this.id}-${packageItem.name}`, wwLib.getEditorWindow()[packageItem.name]);
