@@ -14,7 +14,7 @@
 
                     <input
                         v-model="pack.instanceName"
-                        class="ww-editor-input version-input -small ml-2"
+                        class="ww-editor-input instanceName-input -small ml-2"
                         type="text"
                         placeholder="Instance name"
                         @input="updateInstanceName(pack.name, pack.instanceName)"
@@ -193,6 +193,11 @@ export default {
 
 .version-input {
     max-width: 60px;
+    width: auto;
+}
+
+.version-input {
+    max-width: 120px;
     width: auto;
 }
 
