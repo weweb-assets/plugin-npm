@@ -13,7 +13,7 @@ export default {
     },
     variables: settings => {
         return (settings.publicData.packages || []).map(pack => ({
-            name: pack.package,
+            name: pack.name,
             version: pack.version,
             value: 'Package',
             type: 'object',
