@@ -91,7 +91,6 @@ export default {
             searchedPackages: '',
             packagesResults: [],
             selectedPackage: '',
-            selectedVersion: 'latest',
         };
     },
     computed: {
