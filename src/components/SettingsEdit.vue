@@ -12,6 +12,14 @@
                         :placeholder="pack.version"
                     />
 
+                    <input
+                        v-model="pack.instanceName"
+                        class="ww-editor-input version-input -small ml-2"
+                        type="text"
+                        placeholder="Instance name"
+                        @input="updateInstanceName(pack.name, pack.instanceName)"
+                    />
+
                     <div class="m-auto-left flex flex-row items-center mr-2">
                         <span class="mr-2 body-sm">Auto load</span>
                         <wwEditorInputSwitch small v-model="pack.auto" />
@@ -130,6 +138,9 @@ export default {
             this.changePackages(packages);
 
             this.$nextTick(this.loadInstance);
+        },
+        updateInstancesNames(packageName) {
+            this.plugin.updateInstanceName(packageName);
         },
         loadInstance() {
             this.plugin.onLoad();
