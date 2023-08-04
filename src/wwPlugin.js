@@ -36,7 +36,7 @@ export default {
 
     addScripts(packages, context) {
         for (const packageItem of packages) {
-            if (packageItem.auto) addScript(packageItem, context);
+            if (packageItem.auto) this.addScript(packageItem, context);
         }
     },
 };
