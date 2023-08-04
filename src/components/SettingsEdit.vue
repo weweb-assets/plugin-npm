@@ -22,7 +22,7 @@
 
                     <div class="m-auto-left flex flex-row items-center mr-2">
                         <span class="mr-2 body-sm">Auto load</span>
-                        <wwEditorInputSwitch small v-model="pack.auto" />
+                        <wwEditorInputSwitch small v-model="pack.auto" @change="updateAutoload(pack.auto)" />
                     </div>
                 </span>
 
@@ -143,6 +143,9 @@ export default {
         updateInstanceName(packageName, instanceName) {
             this.plugin.updateInstanceName(packageName, instanceName);
         },
+        updateAutoload(autoload) {
+            if (autoload) this.plugin.onLoad();
+        },
         loadInstance() {
             this.plugin.onLoad();
         },
@@ -198,7 +201,7 @@ export default {
 }
 
 .instanceName-input {
-    max-width: 80px;
+    max-width: 60px;
     width: auto;
 }
 

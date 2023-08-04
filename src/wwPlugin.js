@@ -14,10 +14,16 @@ export default {
         /* wwEditor:end */
     },
 
-    loadPackage() {
-        this.addScript(this.settings.publicData.packages[0], wwLib.getFrontDocument());
+    loadPackage(name) {
+        this.addScript(
+            this.settings.publicData.packages.find(pack => pack.name === name),
+            wwLib.getFrontDocument()
+        );
         /* wwEditor:start */
-        this.addScript(this.settings.publicData.packages[0], wwLib.getEditorDocument());
+        this.addScript(
+            this.settings.publicData.packages.find(pack => pack.name === name),
+            wwLib.getEditorDocument()
+        );
         /* wwEditor:end */
     },
 
@@ -32,16 +38,7 @@ export default {
 
         context.head.appendChild(script);
 
-        wwLib.wwVariable.updateValue(
-            `${this.id}-${packageItem.name}`,
-            wwLib.getFrontWindow()[packageItem.instanceName]
-        );
-        /* wwEditor:start */
-        wwLib.wwVariable.updateValue(
-            `${this.id}-${packageItem.name}`,
-            wwLib.getEditorWindow()[packageItem.instanceName]
-        );
-        /* wwEditor:end */
+        wwLib.wwVariable.updateValue(`${this.id}-${packageItem.name}`, context[packageItem.instanceName]);
     },
 
     updateInstanceName(packageName, instanceName) {
@@ -49,8 +46,6 @@ export default {
         /* wwEditor:start */
         wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
         /* wwEditor:end */
-
-        console.log(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
     },
 
     addScripts(packages, context) {
@@ -58,6 +53,4 @@ export default {
             this.addScript(packageItem, context);
         }
     },
-
-    updatePluginVariables() {},
 };
