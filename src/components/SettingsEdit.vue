@@ -132,7 +132,7 @@ export default {
             this.$nextTick(this.loadInstance);
         },
         loadInstance() {
-            this.plugin.load();
+            this.plugin.onLoad();
         },
     },
 };

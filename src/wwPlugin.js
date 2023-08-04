@@ -7,16 +7,18 @@ import './components/loadPackage.vue';
 export default {
     packages: {},
 
-    onLoad() {
+    async onLoad() {
         this.addScripts(this.settings.publicData.packages, wwLib.getFrontDocument());
+        /* wwEditor:start */
+        this.addScripts(this.settings.publicData.packages, wwLib.getEditorDocument());
+        /* wwEditor:end */
     },
 
     loadPackage() {
         this.addScript(this.settings.publicData.packages[0], wwLib.getFrontDocument());
-    },
-
-    load() {
-        this.addScripts(this.settings.publicData.packages, wwLib.getFrontDocument());
+        /* wwEditor:start */
+        this.addScript(this.settings.publicData.packages[0], wwLib.getEditorDocument());
+        /* wwEditor:end */
     },
 
     addScript(packageItem, context) {
@@ -27,16 +29,13 @@ export default {
         const script = context.createElement('script');
         script.type = 'text/javascript';
         script.src = packageSrc;
-        script.onload = () => {
-            this.packages[packageItem.name] = wwLib.getFrontWindow()[packageItem.name];
-        };
 
         context.head.appendChild(script);
     },
 
     addScripts(packages, context) {
-        for (const packageItem of packages) {
-            if (packageItem.auto) this.addScript(packageItem, context);
+        for (const packageItem of packages || []) {
+            this.addScript(packageItem, context);
         }
     },
 };
