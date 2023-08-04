@@ -22,6 +22,7 @@ export default {
         const scriptFunction = new Function(scriptText);
         const libraryInstance = scriptFunction();
 
+        console.log(`${this.id}-${packageItem.name}`, libraryInstance);
         wwLib.wwVariable.updateValue(`${this.id}-${packageItem.name}`, libraryInstance);
     },
 
