@@ -100,7 +100,11 @@ export default {
             searchedPackages: '',
             packagesResults: [],
             selectedPackage: '',
+            debouncedSearch: null,
         };
+    },
+    created() {
+        this.debouncedSearch = this.debounce(this.searchPackages, 300);
     },
     computed: {
         selectedPackages() {
@@ -117,11 +121,25 @@ export default {
         },
         async searchPackages() {
             if (this.searchedPackages.length > 1) {
-                const response = await wwAxios.get(`https://api.npms.io/v2/search?q=${this.searchedPackages}&size=10`);
-                this.packagesResults = response.data.results.map(result => result.package);
+                try {
+                    const response = await wwAxios.get(
+                        `https://api.npms.io/v2/search?q=${this.searchedPackages}&size=10`
+                    );
+                    this.packagesResults = response.data.results.map(result => result.package);
+                } catch (error) {
+                    console.error('Failed to fetch packages:', error);
+                    this.packagesResults = [];
+                }
             } else {
                 this.packagesResults = [];
             }
+        },
+        debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
         },
         selectPackage(pack) {
             this.searchedPackages = '';
@@ -131,23 +149,26 @@ export default {
                 { name: pack.name, version: pack.version },
             ]);
 
-            this.$nextTick(this.loadInstance);
+            this.updateAndLoad();
         },
         removePackage(index) {
             const packages = [...this.settings.publicData.packages];
             packages.splice(index, 1);
             this.changePackages(packages);
 
-            this.$nextTick(this.loadInstance);
+            this.updateAndLoad();
         },
         updateInstanceName(packageName, instanceName) {
             this.plugin.updateInstanceName(packageName, instanceName);
         },
         updateAutoload(autoload) {
-            if (autoload) this.plugin.onLoad();
+            if (autoload) this.updateAndLoad();
         },
         loadInstance() {
             this.plugin.onLoad();
+        },
+        updateAndLoad() {
+            this.$nextTick(this.loadInstance);
         },
     },
 };
