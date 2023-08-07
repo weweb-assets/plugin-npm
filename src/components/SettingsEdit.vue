@@ -1,7 +1,10 @@
 <template>
     <div class="npm-settings-edit">
         <div class="installedPackage mb-4" v-if="settings.publicData?.packages?.length">
-            <div v-for="pack in settings.publicData.packages" class="flex flex-row justify-between mb-2 items-center">
+            <div
+                v-for="(pack, index) in settings.publicData.packages"
+                class="flex flex-row justify-between mb-2 items-center"
+            >
                 <span class="label-2 text-stale-900 flex flex-row items-center w-100">
                     {{ pack.name }}
 
