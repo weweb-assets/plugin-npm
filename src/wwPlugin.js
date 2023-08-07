@@ -45,8 +45,6 @@ export default {
         /* wwEditor:start */
         wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
         /* wwEditor:end */
-
-        console.log(wwLib.$store.getters['data/getPluginVariables']);
     },
 
     addScripts(packages, context) {
