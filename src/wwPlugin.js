@@ -51,5 +51,7 @@ export default {
         for (const packageItem of packages || []) {
             this.addScript(packageItem, context);
         }
+
+        wwLib.wwPluginHelper.loadPlugins();
     },
 };
