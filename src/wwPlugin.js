@@ -29,16 +29,15 @@ export default {
 
     addScript(packageItem, context) {
         const packageSrc = `https://unpkg.com/${packageItem.name}@${packageItem.version}`;
-        const existingScript = context.querySelector(`script[src="${packageSrc}"]`);
-        if (existingScript) return;
-
         const script = context.createElement('script');
         script.type = 'text/javascript';
         script.src = packageSrc;
 
         context.head.appendChild(script);
 
-        this.updateInstanceName(packageItem.name, packageItem.instanceName);
+        script.onload = () => {
+            this.updateInstanceName(packageItem.name, packageItem.instanceName);
+        };
     },
 
     updateInstanceName(packageName, instanceName) {
