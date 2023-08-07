@@ -153,10 +153,13 @@ export default {
         },
         removePackage(index) {
             const packages = [...this.settings.publicData.packages];
+            console.log('removePackage', packages);
             packages.splice(index, 1);
             this.changePackages(packages);
 
             this.updateAndLoad();
+
+            console.log('removePackage', packages);
         },
         updateInstanceName(packageName, instanceName) {
             this.plugin.updateInstanceName(packageName, instanceName);
@@ -164,11 +167,8 @@ export default {
         updateAutoload(autoload) {
             if (autoload) this.updateAndLoad();
         },
-        loadInstance() {
-            this.plugin.onLoad();
-        },
         updateAndLoad() {
-            this.$nextTick(this.loadInstance);
+            this.$nextTick(this.plugin.onLoad());
         },
     },
 };
