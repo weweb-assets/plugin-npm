@@ -49,7 +49,7 @@ export default {
 
     addScripts(packages, context) {
         for (const packageItem of packages || []) {
-            this.addScript(packageItem, context);
+            if (packageItem.auto) this.addScript(packageItem, context);
         }
 
         wwLib.wwPluginHelper.loadPlugins();
