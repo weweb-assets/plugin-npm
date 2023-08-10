@@ -13,19 +13,6 @@ export default {
         /* wwEditor:end */
     },
 
-    loadPackage(name) {
-        this.addScript(
-            this.settings.publicData.packages.find(pack => pack.name === name),
-            wwLib.getFrontDocument()
-        );
-        /* wwEditor:start */
-        this.addScript(
-            this.settings.publicData.packages.find(pack => pack.name === name),
-            wwLib.getEditorDocument()
-        );
-        /* wwEditor:end */
-    },
-
     addScript(packageItem, context) {
         const packageSrc = `https://unpkg.com/${packageItem.name}@${packageItem.version}`;
         const script = context.createElement('script');
