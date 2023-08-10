@@ -1,6 +1,7 @@
 <template>
-    <wwEditorInputRow label="Package" type="select" required placeholder="Select a package" />
-    TEST
+    <wwEditorFormRow label="Package" required>
+        <wwEditorInputTextSelect :options="packagesOptions" placeholder="Choose an package" />
+    </wwEditorFormRow>
 </template>
 
 <script>
@@ -11,13 +12,13 @@ export default {
     },
     emits: ['update:args'],
     computed: {
-        // packagesOptions() {
-        //     return Object.values(this.plugin).map(collection => ({
-        //         label: collection.name,
-        //         value: collection.id,
-        //         icon: this.getPluginById(collection.pluginId).icon,
-        //     }));
-        // },
+        packagesOptions() {
+            return Object.values(this.plugin).map(pack => ({
+                label: pack.name,
+                value: pack.name,
+                icon: 'advanced',
+            }));
+        },
     },
     mounted() {
         console.log('from action component: ', this.args, this.plugin);
