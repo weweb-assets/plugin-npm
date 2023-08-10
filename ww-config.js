@@ -17,7 +17,7 @@ export default {
             name: pack.name,
             version: pack.version,
             value: {},
-            type: 'object',
+            type: 'any',
             defaultValue: null,
         }));
     },
