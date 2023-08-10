@@ -1,7 +1,7 @@
 export default {
     editor: {
         settings: {
-            icon: 'advanced',
+            icon: 'npm',
             edit: () => import('./src/components/SettingsEdit.vue'),
             summary: () => import('./src/components/SettingsSummary.vue'),
             getIsValid(settings) {
@@ -21,14 +21,4 @@ export default {
             defaultValue: null,
         }));
     },
-    actions: [
-        {
-            name: 'Load package',
-            code: 'loadPackage',
-            isAsync: true,
-            /* wwEditor:start */
-            edit: () => import('./src/components/loadPackage.vue'),
-            /* wwEditor:end */
-        },
-    ],
 };

@@ -22,11 +22,6 @@
                         placeholder="Instance name"
                         @input="updateInstanceName(pack.name, pack.instanceName)"
                     />
-
-                    <div class="m-auto-left flex flex-row items-center mr-2">
-                        <span class="mr-2 body-sm">Auto load</span>
-                        <wwEditorInputSwitch small v-model="pack.auto" @change="updateAutoload(pack.auto)" />
-                    </div>
                 </span>
 
                 <button
@@ -162,9 +157,6 @@ export default {
         },
         updateInstanceName(packageName, instanceName) {
             this.plugin.updateInstanceName(packageName, instanceName);
-        },
-        updateAutoload(autoload) {
-            if (autoload) this.updateAndLoad();
         },
         loadInstance() {
             this.plugin.onLoad();

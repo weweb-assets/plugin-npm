@@ -6,7 +6,6 @@
                 <span class="caption-m">{{ packageItem.name }}</span>
                 <span class="body-md ml-1 text-stale-500">{{ packageItem.version }}</span>
             </div>
-            <span class="m-auto-left body-sm ml-2 text-blue-500" v-if="packageItem.auto">Auto loaded</span>
         </div>
     </div>
 </template>

@@ -1,7 +1,6 @@
 /* wwEditor:start */
 import './components/SettingsEdit.vue';
 import './components/SettingsSummary.vue';
-import './components/loadPackage.vue';
 /* wwEditor:end */
 
 export default {
@@ -49,7 +48,7 @@ export default {
 
     addScripts(packages, context) {
         for (const packageItem of packages || []) {
-            if (packageItem.auto) this.addScript(packageItem, context);
+            this.addScript(packageItem, context);
         }
 
         wwLib.wwPluginHelper.loadPlugins();
