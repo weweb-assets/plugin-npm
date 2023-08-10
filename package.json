@@ -10,9 +10,6 @@
         "build": "weweb build",
         "serve": "weweb serve"
     },
-    "dependencies": {
-        "npm-registry-client": "^8.6.0"
-    },
     "devDependencies": {
         "@vue/eslint-config-prettier": "^6.0.0",
         "@weweb/cli": "latest",
