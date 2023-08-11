@@ -7,23 +7,26 @@ export default {
     packages: {},
 
     async onLoad() {
-        this.addScripts(this.settings.publicData.packages, wwLib.getFrontDocument());
+        await this.addScripts(this.settings.publicData.packages, wwLib.getFrontDocument());
         /* wwEditor:start */
-        this.addScripts(this.settings.publicData.packages, wwLib.getEditorDocument());
+        await this.addScripts(this.settings.publicData.packages, wwLib.getEditorDocument());
         /* wwEditor:end */
     },
 
     addScript(packageItem, context) {
-        const packageSrc = `https://unpkg.com/${packageItem.name}@${packageItem.version}`;
-        const script = context.createElement('script');
-        script.type = 'text/javascript';
-        script.src = packageSrc;
+        return new Promise(resolve => {
+            const packageSrc = `https://unpkg.com/${packageItem.name}@${packageItem.version}`;
+            const script = context.createElement('script');
+            script.type = 'text/javascript';
+            script.src = packageSrc;
 
-        context.head.appendChild(script);
+            script.onload = () => {
+                this.updateInstanceName(packageItem.name, packageItem.instanceName);
+                resolve();
+            };
 
-        script.onload = () => {
-            this.updateInstanceName(packageItem.name, packageItem.instanceName);
-        };
+            context.head.appendChild(script);
+        });
     },
 
     updateInstanceName(packageName, instanceName) {
@@ -34,10 +37,12 @@ export default {
     },
 
     addScripts(packages, context) {
+        const promises = [];
+
         for (const packageItem of packages || []) {
-            this.addScript(packageItem, context);
+            promises.push(this.addScript(packageItem, context));
         }
 
-        wwLib.wwPluginHelper.loadPlugins();
+        return Promise.all(promises);
     },
 };

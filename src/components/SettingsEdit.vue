@@ -3,25 +3,35 @@
         <div class="installedPackage mb-4" v-if="settings.publicData?.packages?.length">
             <div
                 v-for="(pack, index) in settings.publicData.packages"
-                class="flex flex-row justify-between mb-2 items-center"
+                class="flex flex-row justify-between mb-3 items-center"
             >
-                <span class="label-2 text-stale-900 flex flex-row items-center w-100">
-                    {{ pack.name }}
+                <span class="flex flex-col items-start w-100">
+                    <span class="label-2 text-stale-900 mb-2">
+                        <a :href="pack.link">{{ pack.name }}</a>
+                    </span>
 
-                    <input
-                        v-model="pack.version"
-                        class="ww-editor-input version-input -small ml-2"
-                        type="text"
-                        :placeholder="pack.version"
-                    />
+                    <div class="flex flex-row items-start w-100">
+                        <div class="flex flex-col w-50 pr-2">
+                            <span class="label-sm text-stale-500 mb-1">Package version</span>
+                            <input
+                                v-model="pack.version"
+                                class="ww-editor-input version-input -small w-100"
+                                type="text"
+                                :placeholder="pack.version"
+                            />
+                        </div>
 
-                    <input
-                        v-model="pack.instanceName"
-                        class="ww-editor-input instanceName-input -small ml-2"
-                        type="text"
-                        placeholder="Instance name"
-                        @input="updateInstanceName(pack.name, pack.instanceName)"
-                    />
+                        <div class="flex flex-col w-50 pr-2">
+                            <span class="label-sm text-stale-500 mb-1">Instance name</span>
+                            <input
+                                v-model="pack.instanceName"
+                                class="ww-editor-input instanceName-input -small w-100"
+                                type="text"
+                                placeholder="Instance name"
+                                @input="updateInstanceName(pack.name, pack.instanceName)"
+                            />
+                        </div>
+                    </div>
                 </span>
 
                 <button
@@ -87,6 +97,8 @@
 </template>
 
 <script>
+import dictionary from '../packageDictionary';
+
 export default {
     props: {
         plugin: { type: Object, required: true },
@@ -123,6 +135,7 @@ export default {
                     const response = await wwAxios.get(
                         `https://api.npms.io/v2/search?q=${this.searchedPackages}&size=10`
                     );
+
                     this.packagesResults = response.data.results.map(result => result.package);
                 } catch (error) {
                     console.error('Failed to fetch packages:', error);
@@ -144,7 +157,12 @@ export default {
             this.packagesResults = [];
             this.changePackages([
                 ...(this.settings.publicData.packages || []),
-                { name: pack.name, version: pack.version },
+                {
+                    name: pack.name,
+                    version: pack.version,
+                    link: pack.links?.homepage,
+                    instanceName: dictionary.find(d => d.packageName === pack.name)?.instanceName || '',
+                },
             ]);
 
             this.updateAndLoad();
@@ -208,16 +226,6 @@ export default {
     &:hover {
         border: 1px solid var(--ww-color-blue-500);
     }
-}
-
-.version-input {
-    max-width: 60px;
-    width: auto;
-}
-
-.instanceName-input {
-    max-width: 60px;
-    width: auto;
 }
 
 .m-auto-left {
