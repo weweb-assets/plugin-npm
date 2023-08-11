@@ -7,7 +7,7 @@
             >
                 <span class="flex flex-col items-start w-100">
                     <span class="label-2 text-stale-900 mb-2">
-                        <a :href="pack.link">{{ pack.name }}</a>
+                        <a :href="pack.link" target="_blank">{{ pack.name }}</a>
                     </span>
 
                     <div class="flex flex-row items-start w-100">
