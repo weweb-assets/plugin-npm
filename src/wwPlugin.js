@@ -26,6 +26,8 @@ export default {
             };
 
             context.head.appendChild(script);
+
+            console.log('script added: ', packageItem.name);
         });
     },
 
@@ -34,6 +36,8 @@ export default {
         /* wwEditor:start */
         wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
         /* wwEditor:end */
+
+        console.log('variable updated: ', packageName);
     },
 
     addScripts(packages, context) {

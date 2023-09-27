@@ -92,6 +92,13 @@
                     </div>
                 </div>
             </div>
+            <div class="loader ww-editor-form-row" v-if="isLoading">
+                <wwLoader :loading="isLoading"></wwLoader>
+            </div>
+            <div class="error ww-editor-form-row p-2" v-if="errorMessage">
+                <p class="body-sm">{{ errorMessage }}</p>
+                <span @click="searchPackages" class="try-again body-sm mt-2 m-auto-left">Try again</span>
+            </div>
         </div>
     </div>
 </template>
@@ -111,6 +118,8 @@ export default {
             packagesResults: [],
             selectedPackage: '',
             debouncedSearch: null,
+            isLoading: false,
+            errorMessage: '',
         };
     },
     created() {
@@ -130,7 +139,9 @@ export default {
             this.$emit('update:settings', { ...this.settings, publicData: { packages } });
         },
         async searchPackages() {
+            this.errorMessage = '';
             if (this.searchedPackages.length > 1) {
+                this.isLoading = true;
                 try {
                     const response = await wwAxios.get(
                         `https://api.npms.io/v2/search?q=${this.searchedPackages}&size=10`
@@ -138,9 +149,12 @@ export default {
 
                     this.packagesResults = response.data.results.map(result => result.package);
                 } catch (error) {
-                    console.error('Failed to fetch packages:', error);
+                    console.error(error);
+                    this.errorMessage =
+                        'An error has been encountered while searching for packages. Please try again later';
                     this.packagesResults = [];
                 }
+                this.isLoading = false;
             } else {
                 this.packagesResults = [];
             }
@@ -165,7 +179,8 @@ export default {
                 },
             ]);
 
-            this.updateAndLoad();
+            this.plugin.addScript(pack, wwLib.getFrontDocument());
+            this.plugin.addScript(pack, wwLib.getEditorDocument());
         },
         removePackage(index) {
             const packages = [...this.settings.publicData.packages];
@@ -200,6 +215,24 @@ export default {
     }
     &__radio-label {
         margin-left: var(--ww-spacing-02);
+    }
+}
+
+.loader {
+    position: relative;
+    margin-top: var(--ww-spacing-02);
+}
+
+.error {
+    background-color: var(--ww-color-yellow-50);
+    border: 1px solid var(--ww-color-yellow-100);
+    color: var(--ww-color-yellow-500);
+    padding: var(--ww-spacing-02);
+    border-radius: var(--ww-border-radius-02);
+
+    .try-again {
+        cursor: pointer;
+        text-decoration: underline;
     }
 }
 
