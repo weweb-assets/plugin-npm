@@ -7,7 +7,6 @@ export default {
     packages: {},
 
     async onLoad(packages) {
-        console.log('settings', packages);
         await this.addScripts(packages || this.settings.publicData.packages, wwLib.getFrontDocument());
         /* wwEditor:start */
         await this.addScripts(packages || this.settings.publicData.packages, wwLib.getEditorDocument());
@@ -31,6 +30,10 @@ export default {
     },
 
     updatePluginVariables(packageName, instanceName) {
+        console.log(packageName, instanceName);
+        console.log('getFrontWindow', wwLib.getFrontWindow()[instanceName]);
+        console.log('getEditorWindow', wwLib.getEditorWindow()[instanceName]);
+
         if (wwLib.wwVariable.getValue(`${this.id}-${packageName}`)) {
             wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getFrontWindow()[instanceName]);
             /* wwEditor:start */
