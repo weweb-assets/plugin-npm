@@ -28,7 +28,7 @@
                                 class="ww-editor-input instanceName-input -small w-100"
                                 type="text"
                                 placeholder="Instance name"
-                                @input="updateInstanceName(pack.name, pack.instanceName)"
+                                @input="updatePluginVariables(pack.name, pack.instanceName)"
                             />
                         </div>
                     </div>
@@ -183,13 +183,17 @@ export default {
             this.updateAndLoad(updatedPackages);
         },
         removePackage(index) {
+            const removedPackage = this.settings.publicData.packages[index];
+            if (removedPackage.instanceName) {
+                wwLib.wwVariable.deletePluginVariable(`${this.id}-${removedPackage.instanceName}`);
+            }
+
             const packages = [...this.settings.publicData.packages];
             packages.splice(index, 1);
             this.changePackages(packages);
-            this.updateAndLoad();
         },
-        updateInstanceName(packageName, instanceName) {
-            this.plugin.updateInstanceName(packageName, instanceName);
+        updatePluginVariables(packageName, instanceName) {
+            this.plugin.updatePluginVariables(packageName, instanceName);
         },
         loadInstance(packages = null) {
             this.plugin.onLoad(packages);

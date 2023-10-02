@@ -22,7 +22,7 @@ export default {
             script.src = packageSrc;
 
             script.onload = () => {
-                this.updateInstanceName(packageItem.name, packageItem.instanceName);
+                this.updatePluginVariables(packageItem.name, packageItem.instanceName);
                 resolve();
             };
 
@@ -30,7 +30,7 @@ export default {
         });
     },
 
-    updateInstanceName(packageName, instanceName) {
+    updatePluginVariables(packageName, instanceName) {
         if (wwLib.wwVariable.getValue(`${this.id}-${packageName}`)) {
             wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getFrontWindow()[instanceName]);
             /* wwEditor:start */
