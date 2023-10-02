@@ -8,12 +8,12 @@ export default {
 
     async onLoad(packages) {
         await this.addScripts(
-            packages && packages.length ? packages : this.settings.publicData.packages,
+            packages && Array.isArray(packages) ? packages : this.settings.publicData.packages,
             wwLib.getFrontDocument()
         );
         /* wwEditor:start */
         await this.addScripts(
-            packages && packages.length ? packages : this.settings.publicData.packages,
+            packages && Array.isArray(packages) ? packages : this.settings.publicData.packages,
             wwLib.getEditorDocument()
         );
         /* wwEditor:end */
