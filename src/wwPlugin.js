@@ -62,7 +62,7 @@ export default {
     addScripts(packages, context) {
         const promises = [];
 
-        for (const packageItem of packages || []) {
+        for (const packageItem of Array.isArray(packages) ? packages : []) {
             promises.push(this.addScript(packageItem, context));
         }
 
