@@ -26,8 +26,6 @@ export default {
             };
 
             context.head.appendChild(script);
-
-            console.log('script added: ', packageItem.name);
         });
     },
 

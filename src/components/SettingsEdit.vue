@@ -192,6 +192,7 @@ export default {
             this.plugin.updateInstanceName(packageName, instanceName);
         },
         loadInstance() {
+            console.log('plugin', this.plugin);
             this.plugin.onLoad();
         },
         updateAndLoad() {
