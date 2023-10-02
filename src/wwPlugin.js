@@ -42,6 +42,7 @@ export default {
             wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
             /* wwEditor:end */
         } else {
+            /* wwEditor:start */
             wwLib.wwVariable.registerPluginVariable({
                 uid: this.id,
                 name: `${packageName}`,
@@ -50,7 +51,6 @@ export default {
                 type: 'any',
             });
 
-            /* wwEditor:start */
             wwLib.wwVariable.registerPluginVariable({
                 uid: this.id,
                 name: `${packageName}`,
