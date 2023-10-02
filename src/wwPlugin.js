@@ -36,17 +36,11 @@ export default {
     },
 
     updatePluginVariables(packageName, instanceName) {
-        console.log(packageName, instanceName);
-        console.log('getFrontWindow', wwLib.getFrontWindow()[instanceName]);
-        console.log('getEditorWindow', wwLib.getEditorWindow()[instanceName]);
-
         if (wwLib.wwVariable.getValue(`${this.id}-${packageName}`)) {
             wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getFrontWindow()[instanceName]);
             /* wwEditor:start */
             wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
             /* wwEditor:end */
-
-            console.log('variable updated: ', `${this.id}-${packageName}`);
         } else {
             wwLib.wwVariable.registerPluginVariable({
                 uid: this.id,
@@ -65,13 +59,7 @@ export default {
                 type: 'any',
             });
             /* wwEditor:end */
-
-            console.log('variable registered: ', `${this.id}-${packageName}`);
         }
-
-        setTimeout(() => {
-            console.log(wwLib.wwVariable.getValue(`${this.id}-${packageName}`));
-        }, 500);
     },
 
     addScripts(packages, context) {
