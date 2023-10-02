@@ -185,7 +185,7 @@ export default {
         removePackage(index) {
             const removedPackage = this.settings.publicData.packages[index];
             if (removedPackage.instanceName) {
-                wwLib.wwVariable.deletePluginVariable(`${this.id}-${removedPackage.instanceName}`);
+                wwLib.wwVariable.unregisterPluginVariable(`${this.id}-${removedPackage.instanceName}`);
             }
 
             const packages = [...this.settings.publicData.packages];
