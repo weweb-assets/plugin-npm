@@ -36,7 +36,7 @@ export default {
         wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
         /* wwEditor:end */
 
-        console.log('variable updated: ', packageName);
+        console.log('variable updated: ', `${this.id}-${packageName}`);
     },
 
     addScripts(packages, context) {
