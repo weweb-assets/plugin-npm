@@ -52,6 +52,7 @@ export default {
                 uid: this.id,
                 name: `${packageName}`,
                 value: wwLib.getFrontWindow()[instanceName],
+                defaultValue: wwLib.getFrontWindow()[instanceName],
                 type: 'any',
             });
 
@@ -60,12 +61,17 @@ export default {
                 uid: this.id,
                 name: `${packageName}`,
                 value: wwLib.getEditorWindow()[instanceName],
+                defaultValue: wwLib.getFrontWindow()[instanceName],
                 type: 'any',
             });
             /* wwEditor:end */
 
             console.log('variable registered: ', `${this.id}-${packageName}`);
         }
+
+        setTimeout(() => {
+            console.log(wwLib.wwVariable.getValue(`${this.id}-${packageName}`));
+        }, 500);
     },
 
     addScripts(packages, context) {
