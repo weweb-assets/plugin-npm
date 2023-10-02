@@ -1153,7 +1153,7 @@ export default [
     },
     {
         packageName: 'papaparse',
-        instanceName: 'papaParse',
+        instanceName: 'Papa',
     },
     {
         packageName: 'fast-csv',
