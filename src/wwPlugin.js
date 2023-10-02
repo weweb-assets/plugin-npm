@@ -6,11 +6,11 @@ import './components/SettingsSummary.vue';
 export default {
     packages: {},
 
-    async onLoad(settings) {
-        console.log('settings', settings);
-        await this.addScripts(settings || this.settings.publicData.packages, wwLib.getFrontDocument());
+    async onLoad(packages) {
+        console.log('settings', packages);
+        await this.addScripts(packages || this.settings.publicData.packages, wwLib.getFrontDocument());
         /* wwEditor:start */
-        await this.addScripts(settings || this.settings.publicData.packages, wwLib.getEditorDocument());
+        await this.addScripts(packages || this.settings.publicData.packages, wwLib.getEditorDocument());
         /* wwEditor:end */
     },
 

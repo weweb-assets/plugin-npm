@@ -169,7 +169,7 @@ export default {
         selectPackage(pack) {
             this.searchedPackages = '';
             this.packagesResults = [];
-            this.changePackages([
+            const updatedPackages = [
                 ...(this.settings.publicData.packages || []),
                 {
                     name: pack.name,
@@ -177,9 +177,10 @@ export default {
                     link: pack.links?.homepage,
                     instanceName: dictionary.find(d => d.packageName === pack.name)?.instanceName || '',
                 },
-            ]);
+            ];
 
-            this.updateAndLoad(this.settings.publicData.packages);
+            this.changePackages(updatedPackages);
+            this.updateAndLoad(updatedPackages);
         },
         removePackage(index) {
             const packages = [...this.settings.publicData.packages];
@@ -190,11 +191,11 @@ export default {
         updateInstanceName(packageName, instanceName) {
             this.plugin.updateInstanceName(packageName, instanceName);
         },
-        loadInstance(settings = null) {
-            this.plugin.onLoad(settings);
+        loadInstance(packages = null) {
+            this.plugin.onLoad(packages);
         },
-        updateAndLoad(settings = null) {
-            this.$nextTick(this.loadInstance(settings));
+        updateAndLoad(packages = null) {
+            this.$nextTick(this.loadInstance(packages));
         },
     },
 };
