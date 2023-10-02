@@ -179,8 +179,7 @@ export default {
                 },
             ]);
 
-            this.plugin.addScript(pack, wwLib.getFrontDocument());
-            this.plugin.addScript(pack, wwLib.getEditorDocument());
+            this.updateAndLoad(this.settings.publicData.packages);
         },
         removePackage(index) {
             const packages = [...this.settings.publicData.packages];
@@ -191,12 +190,11 @@ export default {
         updateInstanceName(packageName, instanceName) {
             this.plugin.updateInstanceName(packageName, instanceName);
         },
-        loadInstance() {
-            console.log('plugin', this.plugin);
-            this.plugin.onLoad();
+        loadInstance(settings = null) {
+            this.plugin.onLoad(settings);
         },
-        updateAndLoad() {
-            this.$nextTick(this.loadInstance());
+        updateAndLoad(settings = null) {
+            this.$nextTick(this.loadInstance(settings));
         },
     },
 };
