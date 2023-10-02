@@ -36,13 +36,8 @@ export default {
     },
 
     updatePluginVariables(packageName, instanceName) {
-        if (wwLib.wwVariable.getValue(`${this.id}-${packageName}`)) {
-            wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getFrontWindow()[instanceName]);
-            /* wwEditor:start */
-            wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
-            /* wwEditor:end */
-        } else {
-            /* wwEditor:start */
+        /* wwEditor:start */
+        if (!wwLib.wwVariable.getValue(`${this.id}-${packageName}`)) {
             wwLib.wwVariable.registerPluginVariable({
                 uid: this.id,
                 name: `${packageName}`,
@@ -58,8 +53,13 @@ export default {
                 defaultValue: wwLib.getFrontWindow()[instanceName],
                 type: 'any',
             });
-            /* wwEditor:end */
         }
+        /* wwEditor:end */
+
+        wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getFrontWindow()[instanceName]);
+        /* wwEditor:start */
+        wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
+        /* wwEditor:end */
     },
 
     addScripts(packages, context) {
