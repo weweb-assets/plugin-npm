@@ -10,6 +10,6 @@ After adding a library, you must specify the name of the instance it exposes. Th
 
 In the example provided, the xlsx (or SheetJS) library can be accessed through the XLSX instance (in uppercase).
 
-![Screenshot demonstrating access to the xlsx (or SheetJS) library through the uppercase XLSX instance.](https://raw.githubusercontent.com/weweb-assets/plugin-npm/npm-plugin/src/markdown/images/example.png)
+![Screenshot demonstrating access to the xlsx (or SheetJS) library through the uppercase XLSX instance.](https://docs.weweb.io/assets/npm2-bf06bf7b.png)
 
 Most of the time, you'll find the instance name in the library documentation
