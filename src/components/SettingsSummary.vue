@@ -1,7 +1,12 @@
 <template>
-    <div v-for="(packageItem, index) in packages" :key="index" class="npm-settings-summary">
-        <wwEditorIcon large name="library" class="npm-settings-summary__icon" />
-        <span class="caption-m">{{ packageItem.name }}</span>
+    <div v-for="(packageItem, index) in packages" :key="index" class="npm-settings-summary mb-2">
+        <wwEditorIcon large name="code" class="npm-settings-summary__icon" />
+        <div class="flex flex-row items-center justify-between w-100">
+            <div>
+                <span class="caption-m">{{ packageItem.name }}</span>
+                <span class="body-md ml-1 text-stale-500">{{ packageItem.version }}</span>
+            </div>
+        </div>
     </div>
 </template>
 
