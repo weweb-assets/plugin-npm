@@ -1,6 +1,8 @@
 # How to configure the NPM plugin
 
-Any type of package can be installed. However, it's crucial to understand that not all loaded packages will be functional.
+Any type of package can be installed, as long as it is available on [unpkg.com](https://unpkg.com/). 
+
+However, it's crucial to understand that not all loaded packages will be functional.
 
 For the loaded library to be usable, it must be registered in the window. This import method is unique to each library, even though most libraries utilize this method.
 
