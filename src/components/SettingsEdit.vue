@@ -1,4 +1,9 @@
 <template>
+    <p class="label-sm flex items-center text-yellow-500 border-yellow-500 p-3 mb-3">
+        <wwEditorIcon class="mr-3" name="warning" small />
+        Some packages can create conflicts in the Editor. Please consider trying to remove your installed packages if
+        you encounter any issues.
+    </p>
     <div class="npm-settings-edit">
         <div class="installedPackage mb-4" v-if="settings.publicData?.packages?.length">
             <div
