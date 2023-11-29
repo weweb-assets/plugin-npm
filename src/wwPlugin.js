@@ -4,19 +4,15 @@ import './components/SettingsSummary.vue';
 /* wwEditor:end */
 
 export default {
-    packages: {},
-
-    async onLoad(packages) {
-        await this.addScripts(
-            packages && Array.isArray(packages) ? packages : this.settings.publicData.packages,
-            wwLib.getFrontDocument()
-        );
+    async onLoad(settings) {
+        await this.addScripts(settings.publicData.packages, wwLib.getFrontDocument());
         /* wwEditor:start */
-        await this.addScripts(
-            packages && Array.isArray(packages) ? packages : this.settings.publicData.packages,
-            wwLib.getEditorDocument()
-        );
+        await this.addScripts(settings.publicData.packages, wwLib.getEditorDocument());
         /* wwEditor:end */
+    },
+
+    reloadPackages(settings) {
+        this.onLoad(settings);
     },
 
     addScript(packageItem, context) {

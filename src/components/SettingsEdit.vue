@@ -10,10 +10,16 @@
                 v-for="(pack, index) in settings.publicData.packages"
                 class="flex flex-row justify-between mb-3 items-center"
             >
-                <span class="flex flex-col items-start w-100">
-                    <span class="label-2 text-stale-900 mb-2">
-                        <a :href="pack.link" target="_blank">{{ pack.name }}</a>
-                    </span>
+                <div class="flex flex-col items-start w-100">
+                    <div class="label-2 text-stale-900 mb-2 flex">
+                        <span>{{ pack.name }}</span>
+
+                        <a class="ww-editor-link ml-auto" :href="pack.link" target="_blank" v-if="pack.unpkg">
+                            Open source file
+                            <wwEditorIcon class="ml-1" name="arrow-diagonal" small />
+                        </a>
+                        <div v-else class="text-red-500 ml-auto">Not available on Unpkg</div>
+                    </div>
 
                     <div class="flex flex-row items-start w-100">
                         <div class="flex flex-col w-50 pr-2">
@@ -36,16 +42,15 @@
                                 @input="updatePluginVariables(pack.name, pack.instanceName)"
                             />
                         </div>
+                        <button
+                            type="button"
+                            class="ww-editor-button -icon -tertiary -red -small m-auto-left"
+                            @click="removePackage(index)"
+                        >
+                            <wwEditorIcon class="ww-editor-button-icon" name="trash" small />
+                        </button>
                     </div>
-                </span>
-
-                <button
-                    type="button"
-                    class="ww-editor-button -icon -tertiary -red -small m-auto-left"
-                    @click="removePackage(index)"
-                >
-                    <wwEditorIcon class="ww-editor-button-icon" name="trash" small />
-                </button>
+                </div>
             </div>
         </div>
 
@@ -149,10 +154,10 @@ export default {
                 this.isLoading = true;
                 try {
                     const response = await wwAxios.get(
-                        `https://api.npms.io/v2/search?q=${this.searchedPackages}&size=10`
+                        `https://registry.npmjs.com/-/v1/search?text=${this.searchedPackages}&size=10`
                     );
 
-                    this.packagesResults = response.data.results.map(result => result.package);
+                    this.packagesResults = response.data.objects.map(result => result.package);
                 } catch (error) {
                     console.error(error);
                     this.errorMessage =
@@ -171,9 +176,10 @@ export default {
                 timeout = setTimeout(() => func.apply(this, args), wait);
             };
         },
-        selectPackage(pack) {
+        async selectPackage(pack) {
             this.searchedPackages = '';
             this.packagesResults = [];
+            const unpkg = await fetch(`https://unpkg.com/${pack.name}@${pack.version}`)?.ok;
             const updatedPackages = [
                 ...(this.settings.publicData.packages || []),
                 {
@@ -181,11 +187,11 @@ export default {
                     version: pack.version,
                     link: pack.links?.homepage,
                     instanceName: dictionary.find(d => d.packageName === pack.name)?.instanceName || '',
+                    unpkg,
                 },
             ];
 
             this.changePackages(updatedPackages);
-            this.updateAndLoad(updatedPackages);
         },
         removePackage(index) {
             const removedPackage = this.settings.publicData.packages[index];
@@ -199,12 +205,6 @@ export default {
         },
         updatePluginVariables(packageName, instanceName) {
             this.plugin.updatePluginVariables(packageName, instanceName);
-        },
-        loadInstance(packages = null) {
-            this.plugin.onLoad(packages);
-        },
-        updateAndLoad(packages = null) {
-            this.$nextTick(this.loadInstance(packages));
         },
     },
 };
