@@ -153,8 +153,10 @@ export default {
             if (this.searchedPackages.length > 1) {
                 this.isLoading = true;
                 try {
-                    const response = await wwAxios.get(
-                        `https://registry.npmjs.com/-/v1/search?text=${this.searchedPackages}&size=10`
+                    wwAxios.get(
+                        `${wwLib.wwApiRequests._getPluginsUrl()}/npm/designs/${this.websiteId}/search?text=${
+                            this.searchedPackages
+                        }&size=10`
                     );
 
                     this.packagesResults = response.data.objects.map(result => result.package);

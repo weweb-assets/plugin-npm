@@ -10,6 +10,7 @@ export default {
                     !settings.publicData.packages.some(packageItem => !packageItem.name || !packageItem.version)
                 );
             },
+            onSave: 'reloadPackages',
         },
     },
     variables: settings => {
