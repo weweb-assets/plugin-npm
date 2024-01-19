@@ -14,7 +14,7 @@ export default {
         },
     },
     variables: settings => {
-        return (settings.publicData.packages || []).map(pack => ({
+        return (settings?.publicData?.packages || []).map(pack => ({
             name: pack.name,
             version: pack.version,
             value: {},
