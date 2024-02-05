@@ -33,12 +33,12 @@
                         </div>
 
                         <div class="flex flex-col w-50 pr-2">
-                            <span class="label-sm text-stale-500 mb-1">Instance name</span>
+                            <span class="label-sm text-stale-500 mb-1">Global property</span>
                             <input
                                 v-model="pack.instanceName"
                                 class="ww-editor-input instanceName-input -small w-100"
                                 type="text"
-                                placeholder="Instance name"
+                                placeholder="Property name"
                                 @input="updatePluginVariables(pack.name, pack.instanceName)"
                             />
                         </div>
@@ -154,7 +154,7 @@ export default {
                 this.isLoading = true;
                 try {
                     wwAxios.get(
-                        `${wwLib.wwApiRequests._getPluginsUrl()}/npm/designs/${this.websiteId}/search?text=${
+                        `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/npm/search?text=${
                             this.searchedPackages
                         }&size=10`
                     );
