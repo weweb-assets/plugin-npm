@@ -14,11 +14,14 @@
                     <div class="label-2 text-stale-900 mb-2 flex items-center">
                         <span>{{ pack.name }}</span>
 
-                        <a class="ww-editor-link ml-auto" :href="pack.link" target="_blank" v-if="pack.unpkg">
-                            Open source file
+                        <a
+                            class="ww-editor-link ml-2 label-3 flex items-center"
+                            :href="`https://unpkg.com/${pack.name}@${pack.version}`"
+                            target="_blank"
+                        >
+                            Open on UNPKG
                             <wwEditorIcon class="ml-1" name="arrow-diagonal" small />
                         </a>
-                        <div v-else class="text-red-500 ml-2 label-3">(Not available on Unpkg)</div>
                     </div>
 
                     <div class="flex flex-row items-start w-100">
@@ -94,11 +97,15 @@
 
                     <div
                         class="ww-editor-button -primary -small m-auto-left"
-                        v-if="!selectedPackages.includes(pack.name)"
+                        v-if="pack.available && !selectedPackages.includes(pack.name)"
                         @click="selectPackage(pack)"
                     >
                         <wwEditorIcon class="ww-editor-button-icon" name="plus" small />
                         add
+                    </div>
+                    <div v-else-if="!pack.available" class="ww-editor-button text-red-500 -small m-auto-left">
+                        <wwEditorIcon class="ww-editor-button-icon" name="x" small />
+                        Not available on UNPKG
                     </div>
                 </div>
             </div>
@@ -154,8 +161,19 @@ export default {
                             wwLib.wwWebsiteData.getInfo().id
                         }/npm/search?text=${this.searchedPackages}&size=10`
                     );
-
-                    this.packagesResults = data?.objects?.map(result => result.package) || [];
+                    this.packagesResults = await Promise.all(
+                        data?.objects?.map(
+                            async result =>
+                                ({
+                                    ...result.package,
+                                    available: (
+                                        await fetch(
+                                            `https://unpkg.com/${result.package.name}@${result.package.version}`
+                                        )
+                                    )?.ok,
+                                } || [])
+                        )
+                    );
                 } catch (error) {
                     console.error(error);
                     this.errorMessage =
@@ -177,7 +195,6 @@ export default {
         async selectPackage(pack) {
             this.searchedPackages = '';
             this.packagesResults = [];
-            const unpkg = (await fetch(`https://unpkg.com/${pack.name}@${pack.version}`))?.ok;
             const updatedPackages = [
                 ...(this.settings.publicData.packages || []),
                 {
@@ -185,7 +202,6 @@ export default {
                     version: pack.version,
                     link: pack.links?.homepage,
                     instanceName: dictionary.find(d => d.packageName === pack.name)?.instanceName || '',
-                    unpkg,
                 },
             ];
 
