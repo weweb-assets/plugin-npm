@@ -63,7 +63,7 @@
                     class="-full"
                     v-model="searchedPackages"
                     placeholder="Search for a package"
-                    @keyup="searchPackages"
+                    @keyup="debouncedSearch"
                 />
             </wwEditorFormRow>
 
@@ -189,7 +189,11 @@ export default {
             };
         },
         async checkPackageAvailability(pack) {
-            return (await fetch(`https://unpkg.com/${pack.name}@${pack.version}`)).ok;
+            try {
+                return (await fetch(`https://unpkg.com/${pack.name}@${pack.version}`)).ok;
+            } catch (error) {
+                return false;
+            }
         },
         async selectPackage(pack) {
             this.searchedPackages = '';
