@@ -139,10 +139,6 @@ export default {
         selectedPackages() {
             return (this.settings.publicData.packages || []).map(pack => pack.name);
         },
-        availablePackages() {
-            if (!this.packagesResults && !Array.isArray(this.packagesResults)) return [];
-            return this.packagesResults.map(pack => ({ label: pack.name, value: pack.name, detail: pack.name }));
-        },
     },
     methods: {
         changePackages(packages) {
@@ -153,7 +149,7 @@ export default {
             if (this.searchedPackages.length > 1) {
                 this.isLoading = true;
                 try {
-                    const { data } = wwAxios.get(
+                    const { data } = await wwAxios.get(
                         `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${
                             wwLib.wwWebsiteData.getInfo().id
                         }/npm/search?text=${this.searchedPackages}&size=10`
@@ -204,9 +200,6 @@ export default {
             const packages = [...this.settings.publicData.packages];
             packages.splice(index, 1);
             this.changePackages(packages);
-        },
-        updatePluginVariables(packageName, instanceName) {
-            this.plugin.updatePluginVariables(packageName, instanceName);
         },
     },
 };
