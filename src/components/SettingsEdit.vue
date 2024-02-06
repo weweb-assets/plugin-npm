@@ -162,17 +162,12 @@ export default {
                         }/npm/search?text=${this.searchedPackages}&size=10`
                     );
                     this.packagesResults = await Promise.all(
-                        data?.objects?.map(
-                            async result =>
-                                ({
-                                    ...result.package,
-                                    available: (
-                                        await fetch(
-                                            `https://unpkg.com/${result.package.name}@${result.package.version}`
-                                        )
-                                    )?.ok,
-                                } || [])
-                        )
+                        data?.objects?.map(async result => ({
+                            ...result.package,
+                            available: (
+                                await fetch(`https://unpkg.com/${result.package.name}@${result.package.version}`)
+                            )?.ok,
+                        })) || []
                     );
                 } catch (error) {
                     console.error(error);
