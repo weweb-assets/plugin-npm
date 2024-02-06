@@ -154,9 +154,9 @@ export default {
                 this.isLoading = true;
                 try {
                     wwAxios.get(
-                        `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${this.websiteId}/npm/search?text=${
-                            this.searchedPackages
-                        }&size=10`
+                        `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${
+                            wwLib.wwWebsiteData.getInfo().id
+                        }/npm/search?text=${this.searchedPackages}&size=10`
                     );
 
                     this.packagesResults = response.data.objects.map(result => result.package);
