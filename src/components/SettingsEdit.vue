@@ -104,7 +104,6 @@
                         add
                     </div>
                     <div v-else-if="!pack.available" class="ww-editor-button text-red-500 -small m-auto-left">
-                        <wwEditorIcon class="ww-editor-button-icon" name="x" small />
                         Not available on UNPKG
                     </div>
                 </div>
@@ -155,6 +154,7 @@ export default {
             this.errorMessage = '';
             if (this.searchedPackages.length > 1) {
                 this.isLoading = true;
+                this.packagesResults = [];
                 try {
                     const { data } = await wwAxios.get(
                         `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${
@@ -162,12 +162,14 @@ export default {
                         }/npm/search?text=${this.searchedPackages}&size=10`
                     );
                     const packages =
-                        data?.objects?.map(async result => ({
-                            ...result.package,
-                            available: fetch(`https://unpkg.com/${result.package.name}@${result.package.version}`),
-                        })) || [];
-                    await Promise.all(packages.map(p => p.available));
-                    this.packagesResults = packages.map(p => ({ ...p, available: p.ok }));
+                        data?.objects?.map(async result => {
+                            const available = await this.checkPackageAvailability(result.package);
+                            return {
+                                ...result.package,
+                                available,
+                            };
+                        }) || [];
+                    this.packagesResults = await Promise.all(packages);
                 } catch (error) {
                     console.error(error);
                     this.errorMessage =
@@ -185,6 +187,9 @@ export default {
                 clearTimeout(timeout);
                 timeout = setTimeout(() => func.apply(this, args), wait);
             };
+        },
+        async checkPackageAvailability(pack) {
+            return (await fetch(`https://unpkg.com/${pack.name}@${pack.version}`)).ok;
         },
         async selectPackage(pack) {
             this.searchedPackages = '';
