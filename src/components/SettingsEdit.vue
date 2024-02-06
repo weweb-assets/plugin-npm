@@ -11,14 +11,14 @@
                 class="flex flex-row justify-between mb-3 items-center"
             >
                 <div class="flex flex-col items-start w-100">
-                    <div class="label-2 text-stale-900 mb-2 flex">
+                    <div class="label-2 text-stale-900 mb-2 flex items-center">
                         <span>{{ pack.name }}</span>
 
                         <a class="ww-editor-link ml-auto" :href="pack.link" target="_blank" v-if="pack.unpkg">
                             Open source file
                             <wwEditorIcon class="ml-1" name="arrow-diagonal" small />
                         </a>
-                        <div v-else class="text-red-500 ml-auto">Not available on Unpkg</div>
+                        <div v-else class="text-red-500 ml-2 label-3">(Not available on Unpkg)</div>
                     </div>
 
                     <div class="flex flex-row items-start w-100">
@@ -177,7 +177,7 @@ export default {
         async selectPackage(pack) {
             this.searchedPackages = '';
             this.packagesResults = [];
-            const unpkg = await fetch(`https://unpkg.com/${pack.name}@${pack.version}`)?.ok;
+            const unpkg = (await fetch(`https://unpkg.com/${pack.name}@${pack.version}`))?.ok;
             const updatedPackages = [
                 ...(this.settings.publicData.packages || []),
                 {
