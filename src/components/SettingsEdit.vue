@@ -153,13 +153,13 @@ export default {
             if (this.searchedPackages.length > 1) {
                 this.isLoading = true;
                 try {
-                    wwAxios.get(
+                    const { data } = wwAxios.get(
                         `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${
                             wwLib.wwWebsiteData.getInfo().id
                         }/npm/search?text=${this.searchedPackages}&size=10`
                     );
 
-                    this.packagesResults = response.data.objects.map(result => result.package);
+                    this.packagesResults = data?.objects?.map(result => result.package) || [];
                 } catch (error) {
                     console.error(error);
                     this.errorMessage =
