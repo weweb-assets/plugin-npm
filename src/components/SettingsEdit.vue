@@ -161,14 +161,13 @@ export default {
                             wwLib.wwWebsiteData.getInfo().id
                         }/npm/search?text=${this.searchedPackages}&size=10`
                     );
-                    this.packagesResults = await Promise.all(
+                    const packages =
                         data?.objects?.map(async result => ({
                             ...result.package,
-                            available: (
-                                await fetch(`https://unpkg.com/${result.package.name}@${result.package.version}`)
-                            )?.ok,
-                        })) || []
-                    );
+                            available: fetch(`https://unpkg.com/${result.package.name}@${result.package.version}`),
+                        })) || [];
+                    await Promise.all(packages.map(p => p.available));
+                    this.packagesResults = packages.map(p => ({ ...p, available: p.ok }));
                 } catch (error) {
                     console.error(error);
                     this.errorMessage =
