@@ -5,9 +5,9 @@ import './components/SettingsSummary.vue';
 
 export default {
     async onLoad(settings) {
-        await this.addScripts(settings.publicData.packages, wwLib.getFrontDocument());
+        await this.addScripts(settings.publicData?.packages, wwLib.getFrontDocument());
         /* wwEditor:start */
-        await this.addScripts(settings.publicData.packages, wwLib.getEditorDocument());
+        await this.addScripts(settings.publicData?.packages, wwLib.getEditorDocument());
         /* wwEditor:end */
     },
 
@@ -58,7 +58,7 @@ export default {
         /* wwEditor:end */
     },
 
-    addScripts(packages, context) {
+    addScripts(packages = [], context) {
         const promises = [];
 
         for (const packageItem of Array.isArray(packages) ? packages : []) {
