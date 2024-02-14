@@ -10,10 +10,19 @@
                 v-for="(pack, index) in settings.publicData.packages"
                 class="flex flex-row justify-between mb-3 items-center"
             >
-                <span class="flex flex-col items-start w-100">
-                    <span class="label-2 text-stale-900 mb-2">
-                        <a :href="pack.link" target="_blank">{{ pack.name }}</a>
-                    </span>
+                <div class="flex flex-col items-start w-100">
+                    <div class="label-2 text-stale-900 mb-2 flex items-center">
+                        <span>{{ pack.name }}</span>
+
+                        <a
+                            class="ww-editor-link ml-2 label-3 flex items-center"
+                            :href="`https://unpkg.com/${pack.name}@${pack.version}`"
+                            target="_blank"
+                        >
+                            Open on UNPKG
+                            <wwEditorIcon class="ml-1" name="arrow-diagonal" small />
+                        </a>
+                    </div>
 
                     <div class="flex flex-row items-start w-100">
                         <div class="flex flex-col w-50 pr-2">
@@ -27,25 +36,24 @@
                         </div>
 
                         <div class="flex flex-col w-50 pr-2">
-                            <span class="label-sm text-stale-500 mb-1">Instance name</span>
+                            <span class="label-sm text-stale-500 mb-1">Global property</span>
                             <input
                                 v-model="pack.instanceName"
                                 class="ww-editor-input instanceName-input -small w-100"
                                 type="text"
-                                placeholder="Instance name"
+                                placeholder="Property name"
                                 @input="updatePluginVariables(pack.name, pack.instanceName)"
                             />
                         </div>
+                        <button
+                            type="button"
+                            class="ww-editor-button -icon -tertiary -red -small m-auto-left"
+                            @click="removePackage(index)"
+                        >
+                            <wwEditorIcon class="ww-editor-button-icon" name="trash" small />
+                        </button>
                     </div>
-                </span>
-
-                <button
-                    type="button"
-                    class="ww-editor-button -icon -tertiary -red -small m-auto-left"
-                    @click="removePackage(index)"
-                >
-                    <wwEditorIcon class="ww-editor-button-icon" name="trash" small />
-                </button>
+                </div>
             </div>
         </div>
 
@@ -55,7 +63,7 @@
                     class="-full"
                     v-model="searchedPackages"
                     placeholder="Search for a package"
-                    @keyup="searchPackages"
+                    @keyup="debouncedSearch"
                 />
             </wwEditorFormRow>
 
@@ -89,11 +97,14 @@
 
                     <div
                         class="ww-editor-button -primary -small m-auto-left"
-                        v-if="!selectedPackages.includes(pack.name)"
+                        v-if="pack.available && !selectedPackages.includes(pack.name)"
                         @click="selectPackage(pack)"
                     >
                         <wwEditorIcon class="ww-editor-button-icon" name="plus" small />
                         add
+                    </div>
+                    <div v-else-if="!pack.available" class="ww-editor-button text-red-500 -small m-auto-left">
+                        Not available on UNPKG
                     </div>
                 </div>
             </div>
@@ -134,10 +145,6 @@ export default {
         selectedPackages() {
             return (this.settings.publicData.packages || []).map(pack => pack.name);
         },
-        availablePackages() {
-            if (!this.packagesResults && !Array.isArray(this.packagesResults)) return [];
-            return this.packagesResults.map(pack => ({ label: pack.name, value: pack.name, detail: pack.name }));
-        },
     },
     methods: {
         changePackages(packages) {
@@ -147,12 +154,22 @@ export default {
             this.errorMessage = '';
             if (this.searchedPackages.length > 1) {
                 this.isLoading = true;
+                this.packagesResults = [];
                 try {
-                    const response = await wwAxios.get(
-                        `https://api.npms.io/v2/search?q=${this.searchedPackages}&size=10`
+                    const { data } = await wwAxios.get(
+                        `${wwLib.wwApiRequests._getPluginsUrl()}/designs/${
+                            wwLib.wwWebsiteData.getInfo().id
+                        }/npm/search?text=${this.searchedPackages}&size=10`
                     );
-
-                    this.packagesResults = response.data.results.map(result => result.package);
+                    const packages =
+                        data?.objects?.map(async result => {
+                            const available = await this.checkPackageAvailability(result.package);
+                            return {
+                                ...result.package,
+                                available,
+                            };
+                        }) || [];
+                    this.packagesResults = await Promise.all(packages);
                 } catch (error) {
                     console.error(error);
                     this.errorMessage =
@@ -171,7 +188,14 @@ export default {
                 timeout = setTimeout(() => func.apply(this, args), wait);
             };
         },
-        selectPackage(pack) {
+        async checkPackageAvailability(pack) {
+            try {
+                return (await fetch(`https://unpkg.com/${pack.name}@${pack.version}`)).ok;
+            } catch (error) {
+                return false;
+            }
+        },
+        async selectPackage(pack) {
             this.searchedPackages = '';
             this.packagesResults = [];
             const updatedPackages = [
@@ -185,7 +209,6 @@ export default {
             ];
 
             this.changePackages(updatedPackages);
-            this.updateAndLoad(updatedPackages);
         },
         removePackage(index) {
             const removedPackage = this.settings.publicData.packages[index];
@@ -196,15 +219,6 @@ export default {
             const packages = [...this.settings.publicData.packages];
             packages.splice(index, 1);
             this.changePackages(packages);
-        },
-        updatePluginVariables(packageName, instanceName) {
-            this.plugin.updatePluginVariables(packageName, instanceName);
-        },
-        loadInstance(packages = null) {
-            this.plugin.onLoad(packages);
-        },
-        updateAndLoad(packages = null) {
-            this.$nextTick(this.loadInstance(packages));
         },
     },
 };

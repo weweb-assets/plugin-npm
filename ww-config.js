@@ -10,10 +10,11 @@ export default {
                     !settings.publicData.packages.some(packageItem => !packageItem.name || !packageItem.version)
                 );
             },
+            onSave: 'reloadPackages',
         },
     },
     variables: settings => {
-        return (settings.publicData.packages || []).map(pack => ({
+        return (settings?.publicData?.packages || []).map(pack => ({
             name: pack.name,
             version: pack.version,
             value: {},
