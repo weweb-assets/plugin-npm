@@ -1,5 +1,5 @@
 <template>
-    <p class="label-sm flex items-center text-yellow-500 border-yellow-500 p-3 mb-3">
+    <p class="label-sm flex items-center content-warning border-yellow-500 p-3 mb-3">
         <wwEditorIcon class="mr-3" name="warning" small />
         Some packages can create conflicts in the Editor. Please consider trying to remove your installed packages if
         you encounter any issues.
@@ -11,7 +11,7 @@
                 class="flex flex-row justify-between mb-3 items-center"
             >
                 <div class="flex flex-col items-start w-100">
-                    <div class="label-2 text-stale-900 mb-2 flex items-center">
+                    <div class="label-2 content-primary mb-2 flex items-center">
                         <span>{{ pack.name }}</span>
 
                         <a
@@ -26,7 +26,7 @@
 
                     <div class="flex flex-row items-start w-100">
                         <div class="flex flex-col w-50 pr-2">
-                            <span class="label-sm text-stale-500 mb-1">Package version</span>
+                            <span class="label-sm content-tertiary mb-1">Package version</span>
                             <input
                                 v-model="pack.version"
                                 class="ww-editor-input version-input -small w-100"
@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="flex flex-col w-50 pr-2">
-                            <span class="label-sm text-stale-500 mb-1">Global property</span>
+                            <span class="label-sm content-tertiary mb-1">Global property</span>
                             <input
                                 v-model="pack.instanceName"
                                 class="ww-editor-input instanceName-input -small w-100"
@@ -47,7 +47,7 @@
                         </div>
                         <button
                             type="button"
-                            class="ww-editor-button -icon -tertiary -red -small m-auto-left"
+                            class="ww-editor-button -icon -tertiary -small m-auto-left"
                             @click="removePackage(index)"
                         >
                             <wwEditorIcon class="ww-editor-button-icon" name="trash" small />
@@ -75,20 +75,20 @@
                     :class="{ '-selected': selectedPackages.includes(pack.name) }"
                 >
                     <div class="flex flex-row justify-between">
-                        <span class="label-2 text-stale-900 mb-1 flex flex-row items-end">
+                        <span class="label-2 content-primary mb-1 flex flex-row items-end">
                             <a :href="pack.links?.homepage" target="_blank">{{ pack.name }}</a>
-                            <span class="body-sm ml-2 text-stale-500">{{ pack.version }}</span>
+                            <span class="body-sm ml-2 content-tertiary">{{ pack.version }}</span>
                         </span>
                         <span class="flex flex-row justify-between">
                             <a :href="pack.links?.repository" target="_blank">
-                                <wwEditorIcon name="github" class="text-stale-900" />
+                                <wwEditorIcon name="github" class="content-primary" />
                             </a>
                         </span>
                     </div>
-                    <div class="body-sm mb-2 text-stale-500" v-if="pack.author?.name">
+                    <div class="body-sm mb-2 content-tertiary" v-if="pack.author?.name">
                         {{ pack.author?.name }}
                     </div>
-                    <div class="body-sm mb-2 text-stale-500" v-else-if="pack.publisher?.username">
+                    <div class="body-sm mb-2 content-tertiary" v-else-if="pack.publisher?.username">
                         {{ pack.publisher?.username }}
                     </div>
                     <div class="body-sm mb-2">
@@ -103,7 +103,7 @@
                         <wwEditorIcon class="ww-editor-button-icon" name="plus" small />
                         add
                     </div>
-                    <div v-else-if="!pack.available" class="ww-editor-button text-red-500 -small m-auto-left">
+                    <div v-else-if="!pack.available" class="ww-editor-button content-alert -small m-auto-left">
                         Not available on UNPKG
                     </div>
                 </div>
@@ -229,7 +229,7 @@ export default {
     display: flex;
     flex-direction: column;
     &__link {
-        color: var(--ww-color-blue-500);
+        color: var(--ww-color-content-brand);
         margin-left: var(--ww-spacing-02);
     }
     &__row {
@@ -247,9 +247,9 @@ export default {
 }
 
 .error {
-    background-color: var(--ww-color-yellow-50);
-    border: 1px solid var(--ww-color-yellow-100);
-    color: var(--ww-color-yellow-500);
+    background-color: var(--ww-color-bg-warning-secondary);
+    border: 1px solid var(--ww-color-border-warning-secondary);
+    color: var(--ww-color-content-warning);
     padding: var(--ww-spacing-02);
     border-radius: var(--ww-border-radius-02);
 
@@ -267,20 +267,20 @@ export default {
     justify-content: center;
     width: 100%;
     height: 100%;
-    background-color: var(--ww-color-theme-dark-50);
+    background-color: var(--ww-color-bg-secondary);
     border-radius: var(--ww-border-radius-02);
-    border: 1px solid var(--ww-color-theme-dark-100);
+    border: 1px solid var(--ww-color-border);
     overflow: hidden;
     transition: border-color 0.3s ease, background-color 0.3s ease;
     will-change: border-color, background-color;
 
     &.-selected:hover,
     &.-selected {
-        border-color: var(--ww-color-green-500);
+        border-color: var(--ww-color-border-success);
     }
 
     &:hover {
-        border: 1px solid var(--ww-color-blue-500);
+        border: 1px solid var(--ww-color-border-brand);
     }
 }
 

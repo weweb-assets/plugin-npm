@@ -4,7 +4,7 @@
         <div class="flex flex-row items-center justify-between w-100">
             <div>
                 <span class="caption-m">{{ packageItem.name }}</span>
-                <span class="body-md ml-1 text-stale-500">{{ packageItem.version }}</span>
+                <span class="body-md ml-1 content-tertiary">{{ packageItem.version }}</span>
             </div>
         </div>
     </div>
