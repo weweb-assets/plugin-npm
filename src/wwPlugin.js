@@ -16,7 +16,7 @@ export default {
     },
 
     addScript(packageItem, context) {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const packageSrc = `https://unpkg.com/${packageItem.name}@${packageItem.version}`;
             const script = context.createElement('script');
             script.type = 'text/javascript';
@@ -25,6 +25,10 @@ export default {
             script.onload = () => {
                 this.updatePluginVariables(packageItem.name, packageItem.instanceName);
                 resolve();
+            };
+
+            script.onerror = () => {
+                reject();
             };
 
             context.head.appendChild(script);
