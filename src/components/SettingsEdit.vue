@@ -120,7 +120,9 @@
 </template>
 
 <script>
-import dictionary from '../packageDictionary';
+import managementForm from '../../weweb.forms.json';
+
+const dictionary = managementForm.settings.fields.find(field => field.operation === 'npm.packages').suggestions;
 
 export default {
     props: {
