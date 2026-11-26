@@ -273,9 +273,7 @@ export default {
     border-radius: var(--ww-border-radius-02);
     border: 1px solid var(--ww-color-border);
     overflow: hidden;
-    transition:
-        border-color 0.3s ease,
-        background-color 0.3s ease;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
     will-change: border-color, background-color;
 
     &.-selected:hover,
