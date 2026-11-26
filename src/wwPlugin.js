@@ -5,9 +5,12 @@ import './components/SettingsSummary.vue';
 
 export default {
     async onLoad(settings) {
-        await this.addScripts(settings.publicData?.packages, wwLib.getFrontDocument());
+        const front = wwLib.getFrontDocument();
+        await this.addScripts(settings.publicData?.packages, front);
         /* wwEditor:start */
-        await this.addScripts(settings.publicData?.packages, wwLib.getEditorDocument());
+        // The previous editor has a second document. The isolated runtime has one.
+        const editor = wwLib.getEditorDocument();
+        if (editor && editor !== front) await this.addScripts(settings.publicData?.packages, editor);
         /* wwEditor:end */
     },
 
@@ -46,19 +49,23 @@ export default {
                 type: 'any',
             });
 
-            wwLib.wwVariable.registerPluginVariable({
-                uid: this.id,
-                name: `${packageName}`,
-                value: wwLib.getEditorWindow()[instanceName],
-                defaultValue: wwLib.getFrontWindow()[instanceName],
-                type: 'any',
-            });
+            if (wwLib.getEditorWindow() !== wwLib.getFrontWindow()) {
+                wwLib.wwVariable.registerPluginVariable({
+                    uid: this.id,
+                    name: packageName,
+                    value: wwLib.getEditorWindow()[instanceName],
+                    defaultValue: wwLib.getFrontWindow()[instanceName],
+                    type: 'any',
+                });
+            }
         }
         /* wwEditor:end */
 
         wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getFrontWindow()[instanceName]);
         /* wwEditor:start */
-        wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
+        if (wwLib.getEditorWindow() !== wwLib.getFrontWindow()) {
+            wwLib.wwVariable.updateValue(`${this.id}-${packageName}`, wwLib.getEditorWindow()[instanceName]);
+        }
         /* wwEditor:end */
     },
 
